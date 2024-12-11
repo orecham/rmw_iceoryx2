@@ -20,9 +20,9 @@ jobs:
       source-code: ${{ steps.filter.outputs.source-code }}
       markdown: ${{ steps.filter.outputs.markdown }}
     steps:
-      - name: checkout sources
+      - name: Checkout sources
         uses: actions/checkout@v4
-      - name: check for changed file types
+      - name: Check for changed file types
         uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -38,11 +38,11 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
-      - name: checkout sources
+      - name: Checkout sources
         uses: actions/checkout@v4
-      - name: check format of all commit messages
+      - name: Check format of all commit messages
         run: ./scripts/ci/check-commit-msg.sh
-      - name: check license header
+      - name: Check license header
         run: ./scripts/ci/check-spdx-license-header.sh
 
   static-code-analysis:
@@ -51,15 +51,15 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
-      - name: checkout sources
+      - name: Checkout sources
         uses: actions/checkout@v4
-      - name: install clang-tidy and clang-format
+      - name: Install clang-tidy and clang-format
         uses: ./.github/actions/install-clang
-      - name: display clang-format and clang-tidy versions
+      - name: Display clang-format and clang-tidy versions
         run: |
           clang-format --version
           clang-tidy --version
-      - name: clang-format
+      - name: Run clang-format
         run: git ls-files | grep -E "\.(c|cc|cpp|cxx|inl|h|hh|hpp|hxx)$" | xargs clang-format -i -style=file --Werror --dry-run
 #     - name: Run clang-tidy
 #       run: |
@@ -81,9 +81,9 @@ jobs:
           python3-colcon-mixin \
           python3-vcstool \
           python3-rosdep
-    - name: colcon build
+    - name: Build with colcon
       run: |
         cd $WORKSPACE_DIR
         . /opt/ros/rolling/setup.sh
         colcon build $CLANG_COMPILER $BUILD_ARGS \
-          --packages-select rmw_iceoryx2_cxx
+          --packages-select rmw_iceoryx2_cxx rmw_iceoryx2_cxx_test_msgs
