@@ -20,9 +20,9 @@ jobs:
       source-code: ${{ steps.filter.outputs.source-code }}
       markdown: ${{ steps.filter.outputs.markdown }}
     steps:
-      - name: Checkout sources
+      - name: checkout sources
         uses: actions/checkout@v4
-      - name: Check for changed file types
+      - name: check for changed file types
         uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -38,11 +38,11 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout sources
+      - name: checkout sources
         uses: actions/checkout@v4
-      - name: Check format of all commit messages
+      - name: check format of all commit messages
         run: ./scripts/ci/check-commit-msg.sh
-      - name: Check license header
+      - name: check license header
         run: ./scripts/ci/check-spdx-license-header.sh
 
   static-code-analysis:
@@ -51,15 +51,15 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout sources
+      - name: checkout sources
         uses: actions/checkout@v4
-      - name: Install clang-tidy and clang-format
+      - name: install clang-tidy and clang-format
         uses: ./.github/actions/install-clang
-      - name: Display clang-format and clang-tidy versions
+      - name: display clang-format and clang-tidy versions
         run: |
           clang-format --version
           clang-tidy --version
-      - name: Run clang-format
+      - name: clang-format
         run: git ls-files | grep -E "\.(c|cc|cpp|cxx|inl|h|hh|hpp|hxx)$" | xargs clang-format -i -style=file --Werror --dry-run
 #     - name: Run clang-tidy
 #       run: |
@@ -81,11 +81,7 @@ jobs:
           python3-colcon-mixin \
           python3-vcstool \
           python3-rosdep
-    - name: Initialize rosdep
-      run: |
-        rosdep init
-        rosdep update
-    - name: Build with colcon
+    - name: colcon build
       run: |
         cd $WORKSPACE_DIR
         . /opt/ros/rolling/setup.sh
