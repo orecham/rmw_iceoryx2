@@ -99,4 +99,4 @@ jobs:
         cd $WORKSPACE_DIR
         . /opt/ros/rolling/setup.sh
         colcon build $CLANG_COMPILER $BUILD_ARGS \
-          --packages-select rmw_iceoryx2_cxx rmw_iceoryx2_cxx_test_msgs
+          --packages-select test_interface_files rmw_iceoryx2_cxx rmw_iceoryx2_cxx_test_msgs
