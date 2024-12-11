@@ -72,7 +72,6 @@ jobs:
     container:
       image: ros:rolling
     steps:
-    - uses: actions/checkout@v3
     - name: Install dependencies
       run: |
         apt-get update
@@ -81,6 +80,20 @@ jobs:
           python3-colcon-mixin \
           python3-vcstool \
           python3-rosdep
+    - name: Create workspace
+      run: |
+        mkdir -p $WORKSPACE_DIR/src/rmw_iceoryx2
+        mkdir -p $WORKSPACE_DIR/src/test_interface_files
+    - name: Checkout sources
+      uses: actions/checkout@v3
+      with:
+        path: $WORKSPACE_DIR/src/rmw_iceoryx2
+    - name: Checkout test_interface_files
+      uses: actions/checkout@v3
+      with:
+        repository: ros2/test_interface_files
+        path: $WORKSPACE_DIR/src/test_interface_files
+        ref: rolling
     - name: Build with colcon
       run: |
         cd $WORKSPACE_DIR
